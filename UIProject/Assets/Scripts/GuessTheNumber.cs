@@ -19,6 +19,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     {
         GameSetup();
         
+        //Set the buttons to call a function
         Button redo = reset.GetComponent<Button>();
         redo.onClick.AddListener(GameSetup);
         Button check = submit.GetComponent<Button>();
@@ -34,11 +35,41 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     public void GameSetup()
     {
-        randomNumber = Random.Range(0, 10);
+        //resets game back to original state.
+        submit.interactable = true;
+        randomNumber = Random.Range(1, 10);
+        guessAmt = 3;
         header.text = $"Welcome to the game! Pick a number 1 through 9, you have {guessAmt} of guesses remaining.";
+        
     }
     public void SubmitGuess()
     {
-        
+        //make sure that input is a number, call the user stupid if its not.
+        if (!int.TryParse(input.text, out userInput))
+        {
+            header.text = "Please enter a valid number.";
+            return;
+        }
+        else
+        {
+            int userInput = int.Parse(input.text);
+            guessAmt--;
+
+            //go through if statements to check if its the number or not, or if you are out fo guesses.
+            if (userInput == randomNumber)
+            {
+                header.text = "Congrats! You got it!";
+                submit.interactable = false;
+            }
+            else if (guessAmt <= 0)
+            {
+                header.text = "Game over! No guesses left.";
+                submit.interactable = false;
+            }
+            else
+            {
+                header.text = $"Wrong guess. {guessAmt} tries left.";
+            }
+        }
     }
 }
